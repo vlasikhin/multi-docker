@@ -7,7 +7,7 @@ before_install:
   - docker build -t vlasikhin/react-test -f ./client/Dockerfile.dev ./client
 
 script:
-  - docker run vlasikhin/react-test npm test -- --covarage
+  - docker run vlasikhin/react-test npm test -- --coverage
 
 after_success:
   - docker build -t vlasikhin/multi-client ./client
