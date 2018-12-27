@@ -1,0 +1,21 @@
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - docker build -t vlasikhin/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run vlasikhin/react-test npm test -- --covarage
+
+after_success:
+  - docker build -t vlasikhin/multi-client ./client
+  - docker build -t vlasikhin/multi-nginx ./nginx
+  - docker build -t vlasikhin/multi-server ./server
+  - docker build -t vlasikhin/multi-worker ./worker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push vlasikhin/multi-client
+  - docker push vlasikhin/multi-nginx
+  - docker push vlasikhin/multi-server
+  - docker push vlasikhin/multi-worker
